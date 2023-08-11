@@ -8,11 +8,13 @@
 import Foundation
 import CoreBluetooth
 
-let ECGServiceCBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2000")
-let ECGSampleDataCharacteristicCBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2012")
-let ECGSampleMaskCharacteristicCBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2013")
-let ECGResultCharacteristicCBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2014")
-let HRServiceCBUUID = CBUUID(string: "0x180D")
+let ECG_SERVICE_CBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2000")
+let ECG_SAMPLE_DATA_CHARACTERISTIC_CBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2012")
+let ECG_SAMPLE_MASK_CHARACTERISTIC_CBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2013")
+let ECG_RESULT_CHARACTERISTIC_CBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2014")
+let HR_SERVICE_CBUUID = CBUUID(string: "0x180D")
+
+let HK_HEART_RATE_LABELS: Array<String> = Array(arrayLiteral: "NORMAL", "TACHYCARDIA", "BRADYCARDIA")
 
 
 var sampleData: Array<Float> = Array()
@@ -20,12 +22,13 @@ var startDataCollection = false
 
 
 struct Result {
-  var heartRate = UInt32()
-  var heartRhythm = UInt32()
-  var numNormBeats = UInt32()
-  var numPacBeats = UInt32()
-  var numPvcBeats = UInt32()
-  var arrhythmia = Bool()
+    var heartRate = UInt32()
+    var heartRhythm = String()
+    var heartRhythmID = UInt32()
+    var numNormBeats = UInt32()
+    var numPacBeats = UInt32()
+    var numPvcBeats = UInt32()
+    var arrhythmia = Bool()
 }
 
 var results = Result()
@@ -65,7 +68,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     
     func startScanning() {
         print("Scanning Start")
-        centralManager.scanForPeripherals(withServices: [ECGServiceCBUUID, HRServiceCBUUID])
+        centralManager.scanForPeripherals(withServices: [ECG_SERVICE_CBUUID, HR_SERVICE_CBUUID])
     }
     
     func stopScanning() {
@@ -86,7 +89,7 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected to \(ECGSensorPeripheral.name ?? "nameUnknown")")
-        ECGSensorPeripheral.discoverServices([ECGServiceCBUUID])
+        ECGSensorPeripheral.discoverServices([ECG_SERVICE_CBUUID])
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -117,12 +120,12 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
-        case ECGSampleDataCharacteristicCBUUID:
+        case ECG_SAMPLE_DATA_CHARACTERISTIC_CBUUID:
             let ECGSample = ParseECGSample(from: characteristic)
             print("Got ECGSample: \(ECGSample)")
-        case ECGSampleMaskCharacteristicCBUUID:
+        case ECG_SAMPLE_MASK_CHARACTERISTIC_CBUUID:
             print("Notified of ECGSampleMask")
-        case ECGResultCharacteristicCBUUID:
+        case ECG_RESULT_CHARACTERISTIC_CBUUID:
             let ECGResult = ParseECGResult(from: characteristic)
             print("""
             Got ECGResult:
@@ -168,11 +171,13 @@ extension BluetoothManager: CBPeripheralDelegate {
             let data = characteristic.value!
             
             results.heartRate = data.uint32
-            results.heartRhythm = data.dropFirst(4).uint32
+            results.heartRhythmID = data.dropFirst(4).uint32
+            results.heartRhythm = HK_HEART_RATE_LABELS[Int(results.heartRhythmID)]
             results.numNormBeats = data.dropFirst(8).uint32
             results.numPacBeats = data.dropFirst(12).uint32
             results.numPvcBeats = data.dropFirst(16).uint32
             results.arrhythmia = data.dropFirst(20).uint32 == 0 ? false : true
+            
             
             return """
           Heart Rate: \(results.heartRate)

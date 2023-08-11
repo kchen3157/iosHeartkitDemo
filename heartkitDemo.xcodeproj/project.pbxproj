@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		075DA36A2A85FC210001C216 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075DA3692A85FC210001C216 /* BluetoothManager.swift */; };
+		075DA36D2A8604D00001C216 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075DA36C2A8604D00001C216 /* CoreBluetooth.framework */; };
+		075DA36F2A8604EA0001C216 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075DA36E2A8604EA0001C216 /* SwiftUI.framework */; };
 		079628B82A84822D0072E53D /* heartkitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 079628B72A84822D0072E53D /* heartkitDemoApp.swift */; };
 		079628BA2A84822D0072E53D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 079628B92A84822D0072E53D /* ContentView.swift */; };
 		079628BC2A84822F0072E53D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 079628BB2A84822F0072E53D /* Assets.xcassets */; };
@@ -16,6 +18,8 @@
 
 /* Begin PBXFileReference section */
 		075DA3692A85FC210001C216 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
+		075DA36C2A8604D00001C216 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		075DA36E2A8604EA0001C216 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		079628B42A84822D0072E53D /* heartkitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = heartkitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		079628B72A84822D0072E53D /* heartkitDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = heartkitDemoApp.swift; sourceTree = "<group>"; };
 		079628B92A84822D0072E53D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -28,17 +32,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				075DA36F2A8604EA0001C216 /* SwiftUI.framework in Frameworks */,
+				075DA36D2A8604D00001C216 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		075DA36B2A8604CF0001C216 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				075DA36E2A8604EA0001C216 /* SwiftUI.framework */,
+				075DA36C2A8604D00001C216 /* CoreBluetooth.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		079628AB2A84822D0072E53D = {
 			isa = PBXGroup;
 			children = (
 				079628B62A84822D0072E53D /* heartkitDemo */,
 				079628B52A84822D0072E53D /* Products */,
+				075DA36B2A8604CF0001C216 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -279,6 +295,7 @@
 				DEVELOPMENT_TEAM = WRF9BVY455;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = Ezezezez;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -308,6 +325,7 @@
 				DEVELOPMENT_TEAM = WRF9BVY455;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = Ezezezez;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
