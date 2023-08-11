@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		075DA36A2A85FC210001C216 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075DA3692A85FC210001C216 /* BluetoothManager.swift */; };
 		079628B82A84822D0072E53D /* heartkitDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 079628B72A84822D0072E53D /* heartkitDemoApp.swift */; };
 		079628BA2A84822D0072E53D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 079628B92A84822D0072E53D /* ContentView.swift */; };
 		079628BC2A84822F0072E53D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 079628BB2A84822F0072E53D /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		075DA3692A85FC210001C216 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		079628B42A84822D0072E53D /* heartkitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = heartkitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		079628B72A84822D0072E53D /* heartkitDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = heartkitDemoApp.swift; sourceTree = "<group>"; };
 		079628B92A84822D0072E53D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			children = (
 				079628B72A84822D0072E53D /* heartkitDemoApp.swift */,
 				079628B92A84822D0072E53D /* ContentView.swift */,
+				075DA3692A85FC210001C216 /* BluetoothManager.swift */,
 				079628BB2A84822F0072E53D /* Assets.xcassets */,
 				079628BD2A84822F0072E53D /* Preview Content */,
 			);
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				079628BA2A84822D0072E53D /* ContentView.swift in Sources */,
+				075DA36A2A85FC210001C216 /* BluetoothManager.swift in Sources */,
 				079628B82A84822D0072E53D /* heartkitDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

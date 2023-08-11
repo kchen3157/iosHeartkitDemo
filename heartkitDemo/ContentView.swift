@@ -6,14 +6,17 @@
 //
 
 import SwiftUI
+import CoreBluetooth
 
 struct ContentView: View {
+    @ObservedObject var bluetoothManager = BluetoothManager()
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Bluetooth Status: \(bluetoothManager.centralManager.state.rawValue)")
+            Button("Start Scanning") {
+                bluetoothManager.startScanning()
+            }
         }
         .padding()
     }
