@@ -13,6 +13,7 @@ struct HRGuageView: View {
     let minValue: Double
     let maxValue: Double
     let bottomBlack = Double(0.15)
+    let color: Color
     
     var body: some View {
         ZStack {
@@ -25,7 +26,7 @@ struct HRGuageView: View {
             
             Circle()
                 .trim(from: bottomBlack * 1.05, to: CGFloat((value - minValue) / (maxValue - minValue)))
-                .stroke(Color.red, lineWidth: 18)
+                .stroke(color, lineWidth: 18)
                 .frame(width: 100, height: 100)
                 .rotationEffect(.degrees(90 - bottomBlack * 1.05 * 180))
             
@@ -51,6 +52,9 @@ struct BeatGuageView: View {
     var pacBeats: Double
     var pvcBeats: Double
     let title: String
+    var normColor: Color
+    var pacColor: Color
+    var pvcColor: Color
     
     var body: some View {
         
@@ -74,21 +78,21 @@ struct BeatGuageView: View {
                     // NORM BEATS
                     Circle()
                         .trim(from: 0, to: normEnd)
-                        .stroke(Color.blue, lineWidth: 32)
+                        .stroke(normColor, lineWidth: 32)
                         .frame(width: 160, height: 160)
                         .rotationEffect(.degrees(90))
                     
                     // PAC BEATS
                     Circle()
                         .trim(from: normEnd, to: pacEnd)
-                        .stroke(Color.purple, lineWidth: 32)
+                        .stroke(pacColor, lineWidth: 32)
                         .frame(width: 160, height: 160)
                         .rotationEffect(.degrees(90))
                     
                     // PVC BEATS
                     Circle()
                         .trim(from: pacEnd, to: 1)
-                        .stroke(Color.red, lineWidth: 32)
+                        .stroke(pvcColor, lineWidth: 32)
                         .frame(width: 160, height: 160)
                         .rotationEffect(.degrees(90))
                 }
@@ -124,7 +128,7 @@ struct BeatGuageView: View {
                         .bold()
                 }
                 .padding(8)
-                .background(Color.blue)
+                .background(normColor)
                 .cornerRadius(10)
                 
                 VStack(alignment: .center) {
@@ -140,7 +144,7 @@ struct BeatGuageView: View {
                         .bold()
                 }
                 .padding(8)
-                .background(Color.purple)
+                .background(pacColor)
                 .cornerRadius(10)
                 
                 VStack(alignment: .center) {
@@ -156,7 +160,7 @@ struct BeatGuageView: View {
                         .bold()
                 }
                 .padding(8)
-                .background(Color.red)
+                .background(pvcColor)
                 .cornerRadius(10)
             }
             

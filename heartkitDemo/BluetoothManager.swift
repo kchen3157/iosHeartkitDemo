@@ -14,6 +14,8 @@ let ECG_SAMPLE_MASK_CHARACTERISTIC_CBUUID = CBUUID(string: "00002760-08C2-11E1-9
 let ECG_RESULT_CHARACTERISTIC_CBUUID = CBUUID(string: "00002760-08C2-11E1-9073-0E8AC72E2014")
 let HR_SERVICE_CBUUID = CBUUID(string: "0x180D")
 
+let SAMPLE_SIZE = 2500
+
 let HK_HEART_RATE_LABELS: Array<String> = Array(arrayLiteral: "NORMAL", "TACHYCARDIA", "BRADYCARDIA")
 
 
@@ -230,8 +232,11 @@ extension BluetoothManager: CBPeripheralDelegate {
             print("Push ECGMask up to \(segMask.maskData.count)")
         }
         
-        if (segMask.maskData.count == 2500) {
-            segMask.printRaw()
+        if (segMask.maskData.count == SAMPLE_SIZE) {
+            print("Beat Indexes: ", segMask.beatIdxs() as Array)
+            print("Norm Indexes: ", segMask.normalBeatIdxs() as Array)
+            print("PAC Indexes: ", segMask.pacBeatIdxs() as Array)
+            print("PVC Indexes: ", segMask.pvcBeatIdxs() as Array)
         }
     }
     
