@@ -42,6 +42,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     @Published var resultLog = String()
     @Published var sampleData: Array<Float> = Array()
     @Published var results = Result()
+    @Published var segMask = SegMask()
+    var temp: Array<Data> = Array()
     
     
     
@@ -151,9 +153,10 @@ extension BluetoothManager: CBPeripheralDelegate {
             switch characteristic.uuid {
             case ECG_SAMPLE_DATA_CHARACTERISTIC_CBUUID:
                 self.sampleDataLog = self.parseECGSample(from: characteristic)
-                print("Got ECGSample: \(self.sampleDataLog)")
+                let sampleIndex = characteristic.value!.uint32
+                print("Got ECGSample \(sampleIndex): \(self.sampleDataLog)")
             case ECG_SAMPLE_MASK_CHARACTERISTIC_CBUUID:
-                print("Got ECGMask:")
+                print("Got ECGMask \(characteristic.value?.count ?? -1)")
                 self.parseECGMask(from: characteristic)
             case ECG_RESULT_CHARACTERISTIC_CBUUID:
                 self.resultLog = self.parseECGResult(from: characteristic)
@@ -227,15 +230,11 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     private func parseECGMask(from characteristic: CBCharacteristic) -> Void {
         if (startDataCollection) {
-            let data = characteristic.value!
-            let dataLen = data.count
-            var maskData: Array<UInt8> = Array()
-            
-            for i in stride(from: 0, to: dataLen, by: 1) {
-                maskData.append(data.dropFirst(i).uint8)
-            }
-            
-            print(maskData as Array)
+            segMask.push(data: characteristic.value!)
+        }
+        
+        if (segMask.maskData.count == 2500) {
+            segMask.printRaw()
         }
     }
     

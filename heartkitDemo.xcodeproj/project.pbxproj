@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		07183C742A8740FA0073A5A8 /* Guages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07183C732A8740FA0073A5A8 /* Guages.swift */; };
+		07183C762A88093F0073A5A8 /* SegMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07183C752A88093F0073A5A8 /* SegMask.swift */; };
 		075DA36A2A85FC210001C216 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075DA3692A85FC210001C216 /* BluetoothManager.swift */; };
 		075DA36D2A8604D00001C216 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075DA36C2A8604D00001C216 /* CoreBluetooth.framework */; };
 		075DA36F2A8604EA0001C216 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 075DA36E2A8604EA0001C216 /* SwiftUI.framework */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		07183C732A8740FA0073A5A8 /* Guages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guages.swift; sourceTree = "<group>"; };
+		07183C752A88093F0073A5A8 /* SegMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegMask.swift; sourceTree = "<group>"; };
 		075DA3692A85FC210001C216 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		075DA36C2A8604D00001C216 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		075DA36E2A8604EA0001C216 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -77,6 +79,7 @@
 				079628BB2A84822F0072E53D /* Assets.xcassets */,
 				079628BD2A84822F0072E53D /* Preview Content */,
 				07183C732A8740FA0073A5A8 /* Guages.swift */,
+				07183C752A88093F0073A5A8 /* SegMask.swift */,
 			);
 			path = heartkitDemo;
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07183C762A88093F0073A5A8 /* SegMask.swift in Sources */,
 				079628BA2A84822D0072E53D /* ContentView.swift in Sources */,
 				075DA36A2A85FC210001C216 /* BluetoothManager.swift in Sources */,
 				079628B82A84822D0072E53D /* heartkitDemoApp.swift in Sources */,
