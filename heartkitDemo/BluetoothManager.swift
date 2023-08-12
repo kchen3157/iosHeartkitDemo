@@ -32,7 +32,7 @@ struct Result {
 
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     
-
+    
     
     var centralManager: CBCentralManager!
     var ECGSensorPeripheral: CBPeripheral!
@@ -41,16 +41,16 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate {
     @Published var resultLog = String()
     @Published var sampleData: Array<Float> = Array()
     @Published var results = Result()
-
-
     
     
+    
+    // Init centralManager
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
-    
+    // Display to verify Core Bluetooth Manager state
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         DispatchQueue.main.async {
             switch central.state {
@@ -79,26 +79,31 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate {
         }
     }
     
-    
+    // Function to start scanning
     func startScanning() {
+        startDataCollection = false
         centralManager.scanForPeripherals(withServices: [ECG_SERVICE_CBUUID, HR_SERVICE_CBUUID])
-        print("Scanning Started")
+        print("scanStart")
         DispatchQueue.main.async {
-            self.CBCentralManagerState = "Scanning Started"
+            self.CBCentralManagerState = "scanStart"
         }
     }
     
+    // Function to stop scanning
     func stopScanning() {
         centralManager.stopScan()
-        print("Scanning Stopped")
+        print("scanStop")
         DispatchQueue.main.async {
-            self.CBCentralManagerState = "Scanning Stopped"
+            self.CBCentralManagerState = "scanStop"
         }
     }
     
 }
 
+// Extension compliant to handle peripheral
 extension BluetoothManager: CBPeripheralDelegate {
+    
+    // After peripheral is discovered, connect to peripheral
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print(peripheral)
         ECGSensorPeripheral = peripheral
@@ -107,14 +112,16 @@ extension BluetoothManager: CBPeripheralDelegate {
         centralManager.connect(ECGSensorPeripheral)
     }
     
+    // After peripheral connection successful, display and then discover services
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         DispatchQueue.main.async {
-            self.CBCentralManagerState = "Connected to \(self.ECGSensorPeripheral.name ?? "nameUnknown")"
+            self.CBCentralManagerState = "connected"
         }
         print("Connected to \(ECGSensorPeripheral.name ?? "nameUnknown")")
         ECGSensorPeripheral.discoverServices([ECG_SERVICE_CBUUID])
     }
     
+    // After services discovered, display and then discover chars for each service.
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
         print("Found Services:")
@@ -124,23 +131,20 @@ extension BluetoothManager: CBPeripheralDelegate {
         }
     }
     
+    // After chars discovered, display.
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         guard let characteristics = service.characteristics else {return}
         
         print("Found Characteristics:")
         for characteristic in characteristics {
-            print(characteristic)
-            
-            if characteristic.properties.contains(.read) {
-                print("Characteristic \(characteristic.uuid) properties contains read flag.")
-            }
             if characteristic.properties.contains(.notify) {
-                print("Characteristic \(characteristic.uuid) properties contains notify flag.")
                 peripheral.setNotifyValue(true, for: characteristic)
             }
+            print(characteristic)
         }
     }
     
+    // Upon characteristic value update, run helper functions to parse new data
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         DispatchQueue.main.async {
             switch characteristic.uuid {
@@ -162,13 +166,39 @@ extension BluetoothManager: CBPeripheralDelegate {
         
     }
     
+    // function to disconnect peripheral
+    func disconnectPeripheral() {
+        centralManager.cancelPeripheralConnection(ECGSensorPeripheral)
+    }
+    
+    
+    // After peripheral disconnection, update state and clear data.
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        DispatchQueue.main.async {
+            print("Disconnected from \(self.ECGSensorPeripheral.name ?? "nameUnknown")")
+            self.CBCentralManagerState = "disconnected"
+            startDataCollection = false
+            self.dataClear()
+        }
+    }
+    
+    // function to clear data
+    func dataClear() {
+        DispatchQueue.main.async {
+            self.sampleDataLog = ""
+            self.sampleData.removeAll()
+            self.resultLog = ""
+            self.results = Result()
+        }
+    }
+    
+    // Handle incoming ECGSample, store into data array, return first float value of array as string.
     private func ParseECGSample(from characteristic: CBCharacteristic) -> String {
         
         let index = characteristic.value!.prefix(upTo: 4).uint32
         if (index == 0) {
             startDataCollection = true
-            sampleData.removeAll(keepingCapacity: false)
-            resultLog = ""
+            dataClear()
         }
         
         if (startDataCollection) {
@@ -187,11 +217,11 @@ extension BluetoothManager: CBPeripheralDelegate {
             
             return String(format: "%08f", Float(bitPattern: dataRaw.uint32))
         }
-        return "Incomplete Data"
+        return "Waiting for next data transfer"
         
     }
     
-    
+    // Handle incoming ECGResult, return String summary of preceding ECG Data.
     private func ParseECGResult(from characteristic: CBCharacteristic) -> String {
         
         if (startDataCollection) {

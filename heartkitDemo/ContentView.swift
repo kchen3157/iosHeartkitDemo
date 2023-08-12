@@ -14,6 +14,20 @@ struct ContentView: View {
     
     @ObservedObject var bluetoothManager = BluetoothManager()
     
+    var buttonText: String {
+        if bluetoothManager.CBCentralManagerState == "connected" {
+            return "Disconnect"
+        } else if bluetoothManager.CBCentralManagerState == "scanStart" {
+            return "Stop Scan"
+        } else if bluetoothManager.CBCentralManagerState == "scanStop" ||
+                    bluetoothManager.CBCentralManagerState == "poweredOn" ||
+                    bluetoothManager.CBCentralManagerState == "disconnected" {
+            return "Start Scan"
+        } else {
+            return "Check BT"
+        }
+    }
+    
     var body: some View {
         VStack {
             Chart(0..<bluetoothManager.sampleData.count, id: \.self) { nr in
@@ -33,8 +47,21 @@ struct ContentView: View {
                  ECGResult Get:
                  \(bluetoothManager.resultLog)
                  """)
-            Button("Start Scanning") {
-                bluetoothManager.startScanning()
+            
+            Button(action: {
+                if buttonText == "Disconnect" {
+                    bluetoothManager.disconnectPeripheral()
+                } else if buttonText == "Stop Scan" {
+                    bluetoothManager.stopScanning()
+                } else if buttonText == "Start Scan" {
+                    bluetoothManager.startScanning()
+                }
+            }) {
+                Text(buttonText)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
             }
         }
         .padding()
