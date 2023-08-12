@@ -196,6 +196,7 @@ extension BluetoothManager: CBPeripheralDelegate {
             if (clearResults) {
                 self.results = Result()
             }
+            self.segMask = SegMask()
         }
     }
     
@@ -217,11 +218,6 @@ extension BluetoothManager: CBPeripheralDelegate {
                 sampleData.append(Float(bitPattern: dataRaw.dropFirst(i).uint32))
             }
             
-            
-            //      if (index == 2450) {
-            //        print(sampleData as Array)
-            //      }
-            
             return String(format: "%08f", Float(bitPattern: dataRaw.uint32))
         }
         return "Waiting for next data transfer"
@@ -231,6 +227,7 @@ extension BluetoothManager: CBPeripheralDelegate {
     private func parseECGMask(from characteristic: CBCharacteristic) -> Void {
         if (startDataCollection) {
             segMask.push(data: characteristic.value!)
+            print("Push ECGMask up to \(segMask.maskData.count)")
         }
         
         if (segMask.maskData.count == 2500) {
