@@ -40,27 +40,40 @@ struct ContentView: View {
                     y: .value("Y values", bluetoothManager.sampleData[nr])
                 )
                 .lineStyle(.init(lineWidth: 1))
+                .foregroundStyle(.red)
             }
             .frame(width: 380, height: 200)
             .chartYScale(domain: -6...6)
             .chartXScale(domain: 0...2500)
+            .chartYAxis {
+                AxisMarks(values: .automatic(desiredCount: 0))
+            }
+            .chartXAxis {
+                AxisMarks(values: .automatic(desiredCount: 0))
+            }
+            
+            VStack {
+                var heartRhythmText: String {
+                    if bluetoothManager.results.heartRhythm == "" {
+                        return "--"
+                    }
+                    return bluetoothManager.results.heartRhythm
+                }
+                
+                Text(heartRhythmText)
+                    .font(.title)
+                    .bold()
+                    .lineLimit(1)
+
+                Text("HEART RHYTHM")
+                    .font(.footnote)
+            }
             
             
             HStack(alignment: .top) {
                 
-                VStack {
-                    HRGuageView(value: Double(bluetoothManager.results.heartRate), minValue: 0, maxValue: 150)
-                        .padding()
-                    
-                    VStack {
-                        Text(bluetoothManager.results.heartRhythm)
-                            .font(.title2)
-                            .bold()
-
-                        Text("HEART RHYTHM")
-                            .font(.footnote)
-                    }
-                }
+                HRGuageView(value: Double(bluetoothManager.results.heartRate), minValue: 0, maxValue: 150)
+                    .padding()
                 
                 BeatGuageView(normBeats: Double(bluetoothManager.results.numNormBeats), pacBeats: Double(bluetoothManager.results.numPacBeats), pvcBeats: Double(bluetoothManager.results.numPvcBeats), title: "BEATS")
                     .padding()
