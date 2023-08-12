@@ -9,7 +9,11 @@ import SwiftUI
 import CoreBluetooth
 import Charts
 
+
+
 struct ContentView: View {
+    
+    
     
     
     @ObservedObject var bluetoothManager = BluetoothManager()
@@ -37,16 +41,39 @@ struct ContentView: View {
                 )
                 .lineStyle(.init(lineWidth: 1))
             }
-            .frame(width: 400, height: 200)
+            .frame(width: 380, height: 200)
             .chartYScale(domain: -6...6)
             .chartXScale(domain: 0...2500)
             
+            
+            HStack(alignment: .top) {
+                
+                VStack {
+                    HRGuageView(value: Double(bluetoothManager.results.heartRate), minValue: 0, maxValue: 150)
+                        .padding()
+                    
+                    VStack {
+                        Text(bluetoothManager.results.heartRhythm)
+                            .font(.title2)
+                            .bold()
+
+                        Text("HEART RHYTHM")
+                            .font(.footnote)
+                    }
+                }
+                
+                BeatGuageView(normBeats: Double(bluetoothManager.results.numNormBeats), pacBeats: Double(bluetoothManager.results.numPacBeats), pvcBeats: Double(bluetoothManager.results.numPvcBeats), title: "BEATS")
+                    .padding()
+            }
+            
+            
             Text("Bluetooth Status: \(bluetoothManager.CBCentralManagerState)")
             Text("ECGSample Get: \(bluetoothManager.sampleDataLog)")
-            Text("""
-                 ECGResult Get:
-                 \(bluetoothManager.resultLog)
-                 """)
+//            Text("""
+//                 ECGResult Get:
+//                 \(bluetoothManager.resultLog)
+//                 """)
+            
             
             Button(action: {
                 if buttonText == "Disconnect" {
@@ -65,6 +92,7 @@ struct ContentView: View {
             }
         }
         .padding()
+        
     }
 }
 

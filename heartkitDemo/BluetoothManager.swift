@@ -23,6 +23,7 @@ struct Result {
     var heartRate = UInt32()
     var heartRhythm = String()
     var heartRhythmID = UInt32()
+    var numTotalBeats = UInt32()
     var numNormBeats = UInt32()
     var numPacBeats = UInt32()
     var numPvcBeats = UInt32()
@@ -178,17 +179,19 @@ extension BluetoothManager: CBPeripheralDelegate {
             print("Disconnected from \(self.ECGSensorPeripheral.name ?? "nameUnknown")")
             self.CBCentralManagerState = "disconnected"
             startDataCollection = false
-            self.dataClear()
+            self.dataClear(willClearResults: true)
         }
     }
     
     // function to clear data
-    func dataClear() {
+    func dataClear(willClearResults clearResults: Bool) {
         DispatchQueue.main.async {
             self.sampleDataLog = ""
             self.sampleData.removeAll()
             self.resultLog = ""
-            self.results = Result()
+            if (clearResults) {
+                self.results = Result()
+            }
         }
     }
     
@@ -198,7 +201,7 @@ extension BluetoothManager: CBPeripheralDelegate {
         let index = characteristic.value!.prefix(upTo: 4).uint32
         if (index == 0) {
             startDataCollection = true
-            dataClear()
+            dataClear(willClearResults: false)
         }
         
         if (startDataCollection) {
@@ -233,6 +236,7 @@ extension BluetoothManager: CBPeripheralDelegate {
             results.numNormBeats = data.dropFirst(8).uint32
             results.numPacBeats = data.dropFirst(12).uint32
             results.numPvcBeats = data.dropFirst(16).uint32
+            results.numTotalBeats = results.numNormBeats + results.numPacBeats + results.numPvcBeats
             results.arrhythmia = data.dropFirst(20).uint32 == 0 ? false : true
             
             
