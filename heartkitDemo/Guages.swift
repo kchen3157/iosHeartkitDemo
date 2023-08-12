@@ -113,9 +113,8 @@ struct BeatGuageView: View {
                         .lineLimit(1)
                     Text("""
                         N
-                        O
+                        S
                         R
-                        M
                         """)
                         .font(.caption)
                         .bold()
@@ -129,7 +128,6 @@ struct BeatGuageView: View {
                         .font(.title)
                         .bold()
                     Text("""
-                        
                         P
                         A
                         C
@@ -145,7 +143,6 @@ struct BeatGuageView: View {
                         .font(.title)
                         .bold()
                     Text("""
-                        
                         P
                         V
                         C
