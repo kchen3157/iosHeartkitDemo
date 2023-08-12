@@ -150,12 +150,13 @@ extension BluetoothManager: CBPeripheralDelegate {
         DispatchQueue.main.async {
             switch characteristic.uuid {
             case ECG_SAMPLE_DATA_CHARACTERISTIC_CBUUID:
-                self.sampleDataLog = self.ParseECGSample(from: characteristic)
+                self.sampleDataLog = self.parseECGSample(from: characteristic)
                 print("Got ECGSample: \(self.sampleDataLog)")
             case ECG_SAMPLE_MASK_CHARACTERISTIC_CBUUID:
-                print("Notified of ECGSampleMask")
+                print("Got ECGMask:")
+                self.parseECGMask(from: characteristic)
             case ECG_RESULT_CHARACTERISTIC_CBUUID:
-                self.resultLog = self.ParseECGResult(from: characteristic)
+                self.resultLog = self.parseECGResult(from: characteristic)
                 print("""
                 Got ECGResult:
                 \(self.resultLog)
@@ -196,7 +197,7 @@ extension BluetoothManager: CBPeripheralDelegate {
     }
     
     // Handle incoming ECGSample, store into data array, return first float value of array as string.
-    private func ParseECGSample(from characteristic: CBCharacteristic) -> String {
+    private func parseECGSample(from characteristic: CBCharacteristic) -> String {
         
         let index = characteristic.value!.prefix(upTo: 4).uint32
         if (index == 0) {
@@ -224,8 +225,22 @@ extension BluetoothManager: CBPeripheralDelegate {
         
     }
     
+    private func parseECGMask(from characteristic: CBCharacteristic) -> Void {
+        if (startDataCollection) {
+            let data = characteristic.value!
+            let dataLen = data.count
+            var maskData: Array<UInt8> = Array()
+            
+            for i in stride(from: 0, to: dataLen, by: 1) {
+                maskData.append(data.dropFirst(i).uint8)
+            }
+            
+            print(maskData as Array)
+        }
+    }
+    
     // Handle incoming ECGResult, return String summary of preceding ECG Data.
-    private func ParseECGResult(from characteristic: CBCharacteristic) -> String {
+    private func parseECGResult(from characteristic: CBCharacteristic) -> String {
         
         if (startDataCollection) {
             let data = characteristic.value!
@@ -257,9 +272,15 @@ extension BluetoothManager: CBPeripheralDelegate {
 
 
 extension Data {
-    var uint32:UInt32 {
+    var uint32: UInt32 {
         return UInt32(littleEndian: self.withUnsafeBytes { bytes in
             bytes.load(as: UInt32.self)
+        })
+    }
+    
+    var uint8: UInt8 {
+        return UInt8(littleEndian: self.withUnsafeBytes { bytes in
+            bytes.load(as: UInt8.self)
         })
     }
 }
