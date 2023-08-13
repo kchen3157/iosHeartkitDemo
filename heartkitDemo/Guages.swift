@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Charts
 
 struct HRGuageView: View {
     var value: Double
@@ -47,126 +48,72 @@ struct HRGuageView: View {
     }
 }
 
+
+
 struct BeatGuageView: View {
-    var normBeats: Double
-    var pacBeats: Double
-    var pvcBeats: Double
-    let title: String
-    var normColor: Color
-    var pacColor: Color
-    var pvcColor: Color
+    
+    var data: [(name: String, number: Double)]
+    var total: (name: String, number: Double)
+    
+    let cumulativeSalesRangesForStyles: [(name: String, range: Range<Double>)]
+    
+    @State var selectedSales: Double? = nil
+    
+    init(numNormBeats: Double, numPacBeats: Double, numPvcBeats: Double) {
+        self.data = [
+            (name: "NSR", number: numNormBeats),
+            (name: "PAC", number: numPacBeats),
+            (name: "PVC", number: numPvcBeats),
+        ]
+        self.total = (name: "TOTAL", number: (numNormBeats + numPacBeats + numPvcBeats))
+        
+        var cumulative = 0.0
+        self.cumulativeSalesRangesForStyles = data.map {
+            let newCumulative = cumulative + Double($0.number)
+            let result = (name: $0.name, range: cumulative ..< newCumulative)
+            cumulative = newCumulative
+            return result
+        }
+    }
+    
+    var selectedStyle: (name: String, number: Double)? {
+        if let selectedSales,
+           let selectedIndex = cumulativeSalesRangesForStyles
+            .firstIndex(where: { $0.range.contains(selectedSales) }) {
+            return data[selectedIndex]
+        }
+        return nil
+    }
     
     var body: some View {
-        
-        let totalBeats = normBeats + pacBeats + pvcBeats
-        
-        let normEnd = normBeats / totalBeats
-        
-        let pacEnd = pacBeats / totalBeats + normEnd
-        
-        VStack {
-            
-            ZStack {
-                
-                Circle()
-                    .trim(from: 0, to: CGFloat(1))
-                    .stroke(Color.primary, lineWidth: 35)
-                    .frame(width: 160, height: 160)
-                
-                
-                if (totalBeats != 0) {
-                    // NORM BEATS
-                    Circle()
-                        .trim(from: 0, to: normEnd)
-                        .stroke(normColor, lineWidth: 32)
-                        .frame(width: 160, height: 160)
-                        .rotationEffect(.degrees(90))
-                    
-                    // PAC BEATS
-                    Circle()
-                        .trim(from: normEnd, to: pacEnd)
-                        .stroke(pacColor, lineWidth: 32)
-                        .frame(width: 160, height: 160)
-                        .rotationEffect(.degrees(90))
-                    
-                    // PVC BEATS
-                    Circle()
-                        .trim(from: pacEnd, to: 1)
-                        .stroke(pvcColor, lineWidth: 32)
-                        .frame(width: 160, height: 160)
-                        .rotationEffect(.degrees(90))
-                }
-                
-                
-                VStack {
-                    Text("\(Int(totalBeats))")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundColor(.primary)
-                    Text(title)
-                        .font(.subheadline)
-                }
-                
-                
-            }
-            .padding(.top)
-            .padding(.bottom, 30)
-            
-            
-            HStack {
-                VStack(alignment: .center) {
-                    Text("\(Int(normBeats))")
-                        .font(.title)
-                        .bold()
-                        .lineLimit(1)
-                    Text("""
-                        N
-                        S
-                        R
-                        """)
-                        .font(.caption)
-                        .bold()
-                }
-                .padding(8)
-                .background(normColor)
-                .cornerRadius(10)
-                
-                VStack(alignment: .center) {
-                    Text("\(Int(pacBeats))")
-                        .font(.title)
-                        .bold()
-                    Text("""
-                        P
-                        A
-                        C
-                        """)                        
-                        .font(.caption)
-                        .bold()
-                }
-                .padding(8)
-                .background(pacColor)
-                .cornerRadius(10)
-                
-                VStack(alignment: .center) {
-                    Text("\(Int(pvcBeats))")
-                        .font(.title)
-                        .bold()
-                    Text("""
-                        P
-                        V
-                        C
-                        """)                          
-                        .font(.caption)
-                        .bold()
-                }
-                .padding(8)
-                .background(pvcColor)
-                .cornerRadius(10)
-            }
-            
-            
-            
+        Chart(data, id: \.name) { element in
+            SectorMark(
+                angle: .value("Number", element.number),
+                innerRadius: .ratio(0.618),
+                angularInset: 1.5
+            )
+            .cornerRadius(5.0)
+            .foregroundStyle(by: .value("Name", element.name))
+            .opacity(element.name == selectedStyle?.name || selectedStyle?.name == nil ? 1 : 0.3)
         }
+        .chartLegend(alignment: .center, spacing: 18)
+        .chartAngleSelection(value: $selectedSales)
+        .scaledToFit()
         
+        .chartBackground { chartProxy in
+            GeometryReader { geometry in
+                let frame = geometry[chartProxy.plotFrame!]
+                VStack {
+                    Text(selectedStyle?.number.formatted() ?? total.number.formatted())
+                        .font(.title.bold())
+                        .foregroundColor(.primary)
+                    Text(selectedStyle?.name ?? total.name)
+                        .font(.callout)
+                        .foregroundStyle(.primary)
+                }
+                .position(x: frame.midX, y: frame.midY)
+            }
+        }
     }
 }
+

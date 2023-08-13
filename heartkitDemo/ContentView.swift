@@ -34,8 +34,8 @@ struct ContentView: View {
     
     var body: some View {
         let normColor = Color.blue
-        let pacColor = Color.purple
-        let pvcColor = Color.red
+        let pacColor = Color.green
+        let pvcColor = Color.orange
         let ecgColor = Color.red
         let bpmColor = Color.red
         
@@ -52,7 +52,7 @@ struct ContentView: View {
                     
                 }
                 .frame(width: 380, height: 200)
-                .chartYScale(domain: -6...6)
+//                .chartYScale(domain: -6...6)
                 .chartXScale(domain: 0...2500)
                 .chartYAxis {
                     AxisMarks(values: .automatic(desiredCount: 0))
@@ -119,7 +119,7 @@ struct ContentView: View {
                 HRGuageView(value: Double(bluetoothManager.results.heartRate), minValue: 0, maxValue: 150, color: bpmColor)
                     .padding()
                 
-                BeatGuageView(normBeats: Double(bluetoothManager.results.numNormBeats), pacBeats: Double(bluetoothManager.results.numPacBeats), pvcBeats: Double(bluetoothManager.results.numPvcBeats), title: "BEATS", normColor: normColor, pacColor: pacColor, pvcColor: pvcColor)
+                BeatGuageView(numNormBeats: Double(bluetoothManager.results.numNormBeats), numPacBeats: Double(bluetoothManager.results.numPacBeats), numPvcBeats: Double(bluetoothManager.results.numPvcBeats))
                     .padding()
             }
             
