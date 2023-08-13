@@ -183,6 +183,7 @@ extension BluetoothManager: CBPeripheralDelegate {
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         DispatchQueue.main.async {
             print("Disconnected from \(self.ECGSensorPeripheral.name ?? "nameUnknown")")
+            print(error as Any)
             self.CBCentralManagerState = "disconnected"
             startDataCollection = false
             self.dataClear(willClearResults: true)
