@@ -32,7 +32,15 @@ struct ContentView: View {
         }
     }
     
+    var heartRhythmText: String {
+        if bluetoothManager.results.heartRhythm == "" {
+            return "--"
+        }
+        return bluetoothManager.results.heartRhythm
+    }
+    
     var body: some View {
+        // Color vars
         let normColor = Color.blue
         let pacColor = Color.green
         let pvcColor = Color.orange
@@ -40,70 +48,13 @@ struct ContentView: View {
         let bpmColor = Color.red
         
         VStack {
-            
-            ZStack(alignment: .top) {
-                Chart(0..<bluetoothManager.sampleData.count, id: \.self) { nr in
-                    LineMark(
-                        x: .value("X values", nr),
-                        y: .value("Y values", bluetoothManager.sampleData[nr])
-                    )
-                    .lineStyle(.init(lineWidth: 1))
-                    .foregroundStyle(ecgColor)
-                    
-                }
-                .frame(width: 380, height: 200)
-//                .chartYScale(domain: -6...6)
-                .chartXScale(domain: 0...2500)
-                .chartYAxis {
-                    AxisMarks(values: .automatic(desiredCount: 0))
-                }
-                .chartXAxis {
-                    AxisMarks(values: .automatic(desiredCount: 0))
-                }
-                
-                // Beat Labels
-                GeometryReader { geometry in
-                    ZStack{
-                        Path { path in
-                            for x in bluetoothManager.segMask.beatIdxs() {
-                                let normalizedX = CGFloat(x) * geometry.size.width / CGFloat(SAMPLE_SIZE)
-                                path.move(to: CGPoint(x: normalizedX, y: 0))
-                                path.addLine(to: CGPoint(x: normalizedX, y: geometry.size.height - 20))
-                            }
-                        }
-                        .stroke(normColor, lineWidth: 1)
-                        
-//                        ForEach(bluetoothManager.segMask.normalBeatIdxs().indices, id: \.self) { x in
-//                            let normalizedX = CGFloat(bluetoothManager.segMask.normalBeatIdxs()[x]) * geometry.size.width / CGFloat(SAMPLE_SIZE)
-//                            Text("""
-//                                N
-//                                S
-//                                R
-//                                """)
-//                                .font(.caption)
-//                                .foregroundStyle(normColor)
-//                                .bold()
-//                                .position(x: normalizedX, y: geometry.size.height - 20)
-//                        }
-                    }
-                    
-                }
-                .frame(width: 380, height: 220)
-
-            }
-            .frame(width: 380, height: 240)
+            // ECG Graph
+            ECGGraph(data: bluetoothManager.sampleData, ecgColor: ecgColor, normColor: normColor)
             
             
             
-            
+            // Rhythm Type
             VStack {
-                var heartRhythmText: String {
-                    if bluetoothManager.results.heartRhythm == "" {
-                        return "--"
-                    }
-                    return bluetoothManager.results.heartRhythm
-                }
-                
                 Text(heartRhythmText)
                     .font(.title)
                     .bold()
@@ -113,7 +64,7 @@ struct ContentView: View {
                     .font(.footnote)
             }
             
-            
+            // HR and Beat guages
             HStack(alignment: .top) {
                 
                 HRGuageView(value: Double(bluetoothManager.results.heartRate), minValue: 0, maxValue: 150, color: bpmColor)
@@ -123,7 +74,7 @@ struct ContentView: View {
                     .padding()
             }
             
-            
+            // Debugging stata
             Text("Bluetooth Status: \(bluetoothManager.CBCentralManagerState)")
             Text("ECG Get: \(bluetoothManager.sampleDataLog)")
             //            Text("""
@@ -131,7 +82,7 @@ struct ContentView: View {
             //                 \(bluetoothManager.resultLog)
             //                 """)
             
-            
+            //Button
             Button(action: {
                 if buttonText == "Disconnect" {
                     bluetoothManager.disconnectPeripheral()
@@ -148,9 +99,8 @@ struct ContentView: View {
                     .cornerRadius(10)
             }
         }
-        .padding()
         
-    }
+    }    
 }
 
 #Preview {

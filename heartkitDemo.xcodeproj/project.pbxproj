@@ -16,6 +16,7 @@
 		079628BA2A84822D0072E53D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 079628B92A84822D0072E53D /* ContentView.swift */; };
 		079628BC2A84822F0072E53D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 079628BB2A84822F0072E53D /* Assets.xcassets */; };
 		079628BF2A84822F0072E53D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 079628BE2A84822F0072E53D /* Preview Assets.xcassets */; };
+		07ED99802A8AB1E2006F876A /* ECGGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ED997F2A8AB1E2006F876A /* ECGGraph.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		079628B92A84822D0072E53D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		079628BB2A84822F0072E53D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		079628BE2A84822F0072E53D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		07ED997F2A8AB1E2006F876A /* ECGGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECGGraph.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				079628BD2A84822F0072E53D /* Preview Content */,
 				07183C732A8740FA0073A5A8 /* Guages.swift */,
 				07183C752A88093F0073A5A8 /* SegMask.swift */,
+				07ED997F2A8AB1E2006F876A /* ECGGraph.swift */,
 			);
 			path = heartkitDemo;
 			sourceTree = "<group>";
@@ -165,6 +168,7 @@
 				07183C762A88093F0073A5A8 /* SegMask.swift in Sources */,
 				079628BA2A84822D0072E53D /* ContentView.swift in Sources */,
 				075DA36A2A85FC210001C216 /* BluetoothManager.swift in Sources */,
+				07ED99802A8AB1E2006F876A /* ECGGraph.swift in Sources */,
 				079628B82A84822D0072E53D /* heartkitDemoApp.swift in Sources */,
 				07183C742A8740FA0073A5A8 /* Guages.swift in Sources */,
 			);
