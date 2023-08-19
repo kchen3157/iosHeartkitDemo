@@ -9,45 +9,51 @@ import Foundation
 import SwiftUI
 import Charts
 
+
 struct HRGuageView: View {
+    
     var value: Double
     let minValue: Double
     let maxValue: Double
-    let bottomBlack = Double(0.15)
     let color: Color
     
     var body: some View {
-        ZStack {
+        VStack {
+                Gauge(value: value, in: minValue...maxValue) {
+                } currentValueLabel: {
+                    Text("\(Int(value))")
+                        .foregroundStyle(.foreground)
+                        .font(.largeTitle)
+                        .bold()
+                } minimumValueLabel: {
+                    Text("\(Int(minValue))")
+                        .foregroundStyle(.foreground)
+                        .bold()
+                } maximumValueLabel: {
+                    Text("\(Int(maxValue))")
+                        .foregroundStyle(.foreground)
+                        .bold()
+                }
+                .gaugeStyle(AccessoryLinearGaugeStyle())
+                .tint(Gradient(stops: [Gradient.Stop(color: .red, location: 0),
+                                       Gradient.Stop(color: .orange, location: 0.1),
+                                       Gradient.Stop(color: .yellow, location: 0.2),
+                                       Gradient.Stop(color: .green, location: 0.3),
+                                       Gradient.Stop(color: .green, location: 0.7),
+                                       Gradient.Stop(color: .yellow, location: 0.8),
+                                       Gradient.Stop(color: .orange, location: 0.9),
+                                       Gradient.Stop(color: .red, location: 1)]))
+            Text("\(Int(value))")
+                .foregroundStyle(.foreground)
+                .font(.largeTitle)
+                .bold()
             
-            Circle()
-                .trim(from: bottomBlack, to: CGFloat(1))
-                .stroke(Color.primary, lineWidth: 20)
-                .frame(width: 100, height: 100)
-                .rotationEffect(.degrees(90 - bottomBlack * 180))
-            
-            Circle()
-                .trim(from: bottomBlack * 1.05, to: CGFloat((value - minValue) / (maxValue - minValue)))
-                .stroke(color, lineWidth: 18)
-                .frame(width: 100, height: 100)
-                .rotationEffect(.degrees(90 - bottomBlack * 1.05 * 180))
-            
-            
-            VStack {
-                Text("\(Int(value))")
-                    .font(.title)
-                    .bold()
-                    .foregroundColor(.primary)
-                Text("BPM")
-                    .font(.subheadline)
-            }
-            
-            
+            Text("HR (BPM)")
+                .font(.footnote)
         }
-        .padding()
         
     }
 }
-
 
 
 struct BeatGuageView: View {
@@ -105,7 +111,7 @@ struct BeatGuageView: View {
                 let frame = geometry[chartProxy.plotFrame!]
                 VStack {
                     Text(selectedStyle?.number.formatted() ?? total.number.formatted())
-                        .font(.title.bold())
+                        .font(.largeTitle.bold())
                         .foregroundColor(.primary)
                     Text(selectedStyle?.name ?? total.name)
                         .font(.callout)

@@ -209,7 +209,7 @@ extension BluetoothManager: CBPeripheralDelegate {
         let index = characteristic.value!.prefix(upTo: 4).uint32
         if (index == 0) {
             startDataCollection = true
-            dataClear(willClearResults: false)
+            dataClear(willClearResults: true)
         }
         
         if (startDataCollection) {
@@ -223,7 +223,7 @@ extension BluetoothManager: CBPeripheralDelegate {
             
             return String(format: "%08f", Float(bitPattern: dataRaw.uint32))
         }
-        return "Waiting for next data transfer"
+        return "Waiting..."
         
     }
     

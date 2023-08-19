@@ -23,10 +23,9 @@ struct ECGGraph: View {
                 )
                 .lineStyle(.init(lineWidth: 1))
                 .foregroundStyle(ecgColor)
+                .interpolationMethod(.catmullRom)
                 
             }
-            .frame(width: 380, height: 200)
-            //                .chartYScale(domain: -6...6)
             .chartXScale(domain: 0...2500)
             .chartYAxis {
                 AxisMarks(values: .automatic(desiredCount: 0))
@@ -54,9 +53,8 @@ struct ECGGraph: View {
             //                                                        S
             //                                                        R
             //                                                        """)
-            //                            .font(.caption)
+            //                            .font(.caption.bold())
             //                            .foregroundStyle(normColor)
-            //                            .bold()
             //                            .position(x: normalizedX, y: geometry.size.height - 20)
             //                        }
             //                    }

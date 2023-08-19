@@ -32,11 +32,8 @@ struct ContentView: View {
         }
     }
     
-    var heartRhythmText: String {
-        if bluetoothManager.results.heartRhythm == "" {
-            return "--"
-        }
-        return bluetoothManager.results.heartRhythm
+    func formatText(input: String) -> String {
+        return input == "" ? "--" : input
     }
     
     var body: some View {
@@ -47,40 +44,52 @@ struct ContentView: View {
         let ecgColor = Color.red
         let bpmColor = Color.red
         
-        VStack {
+        VStack(alignment: .center) {
             // ECG Graph
             ECGGraph(data: bluetoothManager.sampleData, ecgColor: ecgColor, normColor: normColor)
-            
-            
+                .padding()
             
             // Rhythm Type
-            VStack {
-                Text(heartRhythmText)
-                    .font(.title)
-                    .bold()
-                    .lineLimit(1)
-                
-                Text("HEART RHYTHM")
-                    .font(.footnote)
-            }
+            Text(formatText(input:bluetoothManager.results.heartRhythm))
+                .font(.largeTitle.bold())
+                .lineLimit(1)
+                .padding()
+            
+            Text("HEART RHYTHM")
+                .font(.footnote)
             
             // HR and Beat guages
-            HStack(alignment: .top) {
-                
-                HRGuageView(value: Double(bluetoothManager.results.heartRate), minValue: 0, maxValue: 150, color: bpmColor)
+            HRGuageView(value: Double(bluetoothManager.results.heartRate), minValue: 0, maxValue: 200, color: bpmColor)
+                    .padding(.horizontal, 15)
                     .padding()
-                
-                BeatGuageView(numNormBeats: Double(bluetoothManager.results.numNormBeats), numPacBeats: Double(bluetoothManager.results.numPacBeats), numPvcBeats: Double(bluetoothManager.results.numPvcBeats))
-                    .padding()
-            }
+
+            
+            
+            BeatGuageView(numNormBeats: Double(bluetoothManager.results.numNormBeats), numPacBeats: Double(bluetoothManager.results.numPacBeats), numPvcBeats: Double(bluetoothManager.results.numPvcBeats))
+                .padding()
+            
+            
+            
+            
             
             // Debugging stata
-            Text("Bluetooth Status: \(bluetoothManager.CBCentralManagerState)")
-            Text("ECG Get: \(bluetoothManager.sampleDataLog)")
-            //            Text("""
-            //                 ECGResult Get:
-            //                 \(bluetoothManager.resultLog)
-            //                 """)
+            HStack {
+                VStack {
+                    Text(formatText(input: bluetoothManager.CBCentralManagerState))
+                        .font(.title2.bold())
+                    Text("BLE Status")
+                        .font(.footnote)
+                }
+                .padding(/*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                VStack {
+                    Text(formatText(input: bluetoothManager.sampleDataLog))
+                        .font(.title2.bold())
+                    Text("ECG Status")
+                        .font(.footnote)
+                }
+                .padding(/*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+            }
+            .padding()
             
             //Button
             Button(action: {
