@@ -1,17 +1,17 @@
 # iosHeartkitDemo
 
 
-An iOS/iPadOS application to display data collected by the HeartKit application (https://github.com/kchen3157/heartkit) for Ambiq Apollo 4 series MCUs.
+An iOS/iPadOS application to display data collected by the HeartKit application (https://github.com/kchen3157/heartkit) for Ambiq Apollo 4 Blue Plus MCUs.
 
-The HeartKit application will take in ECG data, send it over BLE to a host device, and analyze the data using a heart rhythm inference model. Data can be collected either through an external sensor connected to the EVB, or through a test stimulus dataset stored in the application.
+The HeartKit application will take in ECG data and send it over BLE to the iOS/iPadOS application. The EVB will then analyze the data locally using a heart rhythm inference model. Data can be collected either through an external sensor connected to the EVB, or through a test stimulus dataset stored in the application.
 
 Xcode 15 and iOS/iPadOS 17 or later are required to build and run this project. The UI is optimized for portrait mode.
 
 
 ## Features:
 * Realtime display of ECG data direct from sensor.
-* Analysis display at end of heartkit inference:
-  * Heart Rhythm Type (Normal, Barychardia, Tachchardia, Arrythmia)
+* Analysis display on completion of HeartKit inference:
+  * Heart Rhythm Type (Normal, Bradycardia, Tachycardia, Arrhythmia)
   * Average Heart Rate
   * Graph of Beat Type analysis (NSR, PAC, PVC)
 * EVB disconnection/reconnection handling.
